@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kricher — Portail</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <style>
+    /* Hero gradient */
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 60% 40% at 30% 20%, rgba(191,90,242,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 70% 10%, rgba(0,113,227,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 80% 30% at 50% 0%, rgba(0,113,227,0.10) 0%, transparent 70%);
+    }
+
+    /* Spotlight grid card */
+    .card-spotlight {
+      background: linear-gradient(130deg, #0055c8 0%, #6e3db5 50%, #bf5af2 100%);
+      color: #fff;
+      flex-direction: row;
+      align-items: center;
+      gap: 32px;
+      min-height: 160px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-spotlight::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+    .card-spotlight::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: 80px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+    .card-spotlight .card-icon {
+      width: 72px; height: 72px;
+      font-size: 36px;
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
+    .card-spotlight .card-content { flex: 1; }
+    .card-spotlight .card-label,
+    .card-spotlight p,
+    .card-spotlight .card-cta { color: rgba(255,255,255,0.8); }
+    .card-spotlight h3 { color: #fff; font-size: 26px; }
+    .card-spotlight .card-icon { background: rgba(255,255,255,0.15); }
+
+    /* Status dot */
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #30d158;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(48,209,88,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(48,209,88,0.3); }
+      50% { box-shadow: 0 0 0 5px rgba(48,209,88,0.1); }
+    }
+
+    /* Apps mini list */
+    .app-list { list-style: none; margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .app-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .app-list li:hover { background: var(--border); }
+    .app-list li a { display: flex; align-items: center; gap: 10px; width: 100%; color: var(--text); }
+    .app-list .app-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">kricher.fr</span>
+  <ul class="nav-links">
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="apps/">Applications</a></li>
+    <li><a href="helpdesk/">Helpdesk IT</a></li>
+    <li><a href="mailto:support@kricher.fr">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero-bg">
+  <div class="hero">
+    <p class="hero-eyebrow">Portail personnel</p>
+    <h1>Bienvenue sur<br>kricher.fr</h1>
+    <p>Accédez à tous vos projets, applications et outils en un seul endroit.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="apps/" class="btn btn-primary">Mes applications</a>
+      <a href="helpdesk/" class="btn btn-secondary">Helpdesk IT</a>
+    </div>
+  </div>
+</div>
+
+<!-- PROJETS -->
+<div class="section" id="projets">
+  <p class="section-title">Mes projets</p>
+
+  <div class="grid-2">
+
+    <!-- Calendrier -->
+    <a href="https://calendrier.kricher.fr" class="card" target="_blank">
+      <div class="card-icon bg-blue">📅</div>
+      <span class="card-label" style="color:var(--accent)">Sous-domaine</span>
+      <h3>Calendrier</h3>
+      <p>Planification et organisation. Retrouvez vos événements, rendez-vous et interventions programmées.</p>
+      <span class="card-cta">
+        Ouvrir calendrier.kricher.fr
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <!-- Helpdesk -->
+    <a href="helpdesk/" class="card">
+      <div class="card-icon bg-red">🛠</div>
+      <span class="card-label" style="color:#ff453a">Sous-domaine</span>
+      <h3>Helpdesk IT</h3>
+      <p>Support informatique avec tchat IA, téléchargements et formulaire de demande d'intervention à distance.</p>
+      <span class="card-cta">
+        Ouvrir helpdesk.kricher.fr
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <!-- Applications pro (large) -->
+    <div class="card card-large">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div class="card-icon bg-green" style="margin-bottom:0;">💼</div>
+        <div>
+          <span class="card-label" style="color:#30d158">Sous-domaine</span>
+          <h3 style="margin-bottom:0;">Mes Applications</h3>
+        </div>
+      </div>
+      <p style="margin-bottom:0;">Outils professionnels : rapports d'interventions, tableaux de suivi PC & mobile, gestion 2026.</p>
+      <ul class="app-list">
+        <li>
+          <a href="https://kevleny.github.io/Rapport-d-intervention/" target="_blank">
+            <span class="app-icon bg-blue">📋</span>
+            Rapport d'intervention
+            <svg style="margin-left:auto;opacity:0.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://kevleny.github.io/Tableau-de-suivi/" target="_blank">
+            <span class="app-icon bg-purple">📊</span>
+            Tableau de suivi (PC)
+            <svg style="margin-left:auto;opacity:0.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://kevleny.github.io/Tableau-de-suivi-Mobile/" target="_blank">
+            <span class="app-icon bg-orange">📱</span>
+            Tableau de suivi (Mobile)
+            <svg style="margin-left:auto;opacity:0.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://kevleny.github.io/Intervention-2026/" target="_blank">
+            <span class="app-icon bg-teal">🗂</span>
+            Interventions 2026
+            <svg style="margin-left:auto;opacity:0.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </li>
+      </ul>
+      <a href="apps/" class="card-cta" style="margin-top:20px;">
+        Voir apps.kricher.fr
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Base de données -->
+    <a href="database/" class="card card-large card-spotlight">
+      <div class="card-icon">🗄</div>
+      <div class="card-content">
+        <span class="card-label">Base de données</span>
+        <h3>Supabase DB</h3>
+        <p>Accès direct à la base de données Supabase. Consultez vos tables, entrées et statistiques en temps réel.</p>
+        <span class="card-cta" style="margin-top:16px;">
+          Ouvrir la base de données
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div style="font-size:80px;opacity:0.12;position:absolute;right:32px;bottom:-10px;pointer-events:none;line-height:1;">🗄</div>
+    </a>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STATUS BAR -->
+<div class="section" style="padding-top:40px;padding-bottom:40px;">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+    <span style="font-size:14px;font-weight:600;">Services</span>
+    <span class="badge green"><span class="status-dot"></span> Supabase actif</span>
+    <span class="badge" style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Mise à jour : 2026
+    </span>
+    <a href="mailto:support@kricher.fr" class="badge" style="background:var(--bg-card);color:var(--accent);border:1px solid var(--border);">
+      ✉ support@kricher.fr
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 kricher.fr — Tous droits réservés</p>
+  <p style="margin-top:6px;"><a href="mailto:support@kricher.fr">support@kricher.fr</a></p>
+</footer>
+
+</body>
+</html>

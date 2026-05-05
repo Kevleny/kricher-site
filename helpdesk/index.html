@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helpdesk IT — kricher.fr</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    /* TABS */
+    .tabs-bar {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-card);
+      border-radius: 100px;
+      padding: 4px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      width: fit-content;
+      margin: 0 auto 40px;
+    }
+
+    .tab-btn {
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .tab-btn:not(.active):hover {
+      color: var(--text);
+      background: var(--border);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SEARCH */
+    .search-wrap {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    /* CHAT */
+    .chat-container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0071e3, #bf5af2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .chat-header-info h4 { font-size: 14px; font-weight: 600; }
+    .chat-header-info p { font-size: 12px; color: var(--text-secondary); }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .msg-bot {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .msg-user {
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+
+    .msg-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 14px 18px;
+    }
+
+    .msg-typing span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+      animation: bounce 1.2s infinite;
+    }
+    .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .chat-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .chat-footer textarea {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      line-height: 1.4;
+      max-height: 100px;
+      min-height: 40px;
+      transition: border-color 0.2s;
+    }
+
+    .chat-footer textarea:focus { border-color: var(--accent); }
+    .chat-footer textarea::placeholder { color: var(--text-secondary); }
+
+    .chat-send {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.15s;
+      color: #fff;
+    }
+
+    .chat-send:hover { background: var(--accent-hover); transform: scale(1.05); }
+
+    /* QUICK QUESTIONS */
+    .quick-questions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+
+    .quick-btn {
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* DOWNLOADS */
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .dl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .dl-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+    .dl-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .dl-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .dl-info p { font-size: 12px; color: var(--text-secondary); }
+
+    .dl-badge {
+      margin-left: auto;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    /* FORM */
+    .form-container {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 15px;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-notice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,113,227,0.08);
+      border: 1px solid rgba(0,113,227,0.2);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    /* FAQ */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .faq-q {
+      width: 100%;
+      text-align: left;
+      padding: 18px 20px;
+      font-size: 15px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      font-family: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .faq-q svg { flex-shrink: 0; transition: transform 0.25s; color: var(--text-secondary); }
+    .faq-item.open .faq-q svg { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .faq-a-inner { padding: 0 20px 18px; }
+
+    /* NAV search override */
+    .nav-search {
+      position: relative;
+    }
+
+    .nav-search input {
+      padding: 6px 14px 6px 34px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+      width: 180px;
+      transition: width 0.3s, border-color 0.2s;
+    }
+
+    .nav-search input:focus {
+      width: 240px;
+      border-color: var(--accent);
+    }
+
+    .nav-search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .search-results {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-hover);
+      min-width: 280px;
+      overflow: hidden;
+      z-index: 200;
+    }
+
+    .search-result-item {
+      padding: 12px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+
+    .search-result-item:hover { background: var(--bg); }
+
+    #search-results-list:not(:empty) + .search-results,
+    .search-results.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="../" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    kricher.fr
+  </a>
+  <ul class="nav-links" style="margin:0 auto;">
+    <li><a href="./" style="opacity:1;font-weight:600;">Helpdesk IT</a></li>
+  </ul>
+  <div class="nav-search" id="navSearch">
+    <svg class="nav-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Rechercher..." id="navSearchInput" autocomplete="off" />
+    <div class="search-results" id="searchDropdown">
+      <div id="search-results-list"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" style="padding-bottom:32px;">
+  <p class="hero-eyebrow" style="color:#ff453a;">Support informatique</p>
+  <h1 style="font-size:clamp(32px,6vw,60px);">Helpdesk IT</h1>
+  <p>Assistance rapide, téléchargements essentiels et demandes d'intervention.</p>
+</div>
+
+<!-- TABS -->
+<div class="section" style="padding-top:0;">
+  <div class="tabs-bar">
+    <button class="tab-btn active" data-tab="chat">💬 Assistance IA</button>
+    <button class="tab-btn" data-tab="downloads">⬇ Téléchargements</button>
+    <button class="tab-btn" data-tab="intervention">🛠 Demande d'intervention</button>
+    <button class="tab-btn" data-tab="faq">❓ FAQ</button>
+  </div>
+
+  <!-- TAB: CHAT -->
+  <div class="tab-panel active" id="tab-chat">
+    <p class="quick-questions">
+      <button class="quick-btn" onclick="sendQuick('Mon ordinateur est lent, que faire ?')">💻 Ordinateur lent</button>
+      <button class="quick-btn" onclick="sendQuick('Comment réinitialiser mon mot de passe ?')">🔑 Mot de passe oublié</button>
+      <button class="quick-btn" onclick="sendQuick('Ma connexion internet ne fonctionne pas')">🌐 Problème réseau</button>
+      <button class="quick-btn" onclick="sendQuick('Mon imprimante ne répond pas')">🖨 Imprimante</button>
+      <button class="quick-btn" onclick="sendQuick('Comment installer un logiciel ?')">📦 Installer un logiciel</button>
+      <button class="quick-btn" onclick="sendQuick('Mon écran est noir')">🖥 Écran noir</button>
+    </p>
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-header-info">
+          <h4>Assistant Helpdesk</h4>
+          <p><span style="color:#30d158;">●</span> En ligne — Répond instantanément</p>
+        </div>
+        <a href="mailto:support@kricher.fr" style="margin-left:auto;font-size:13px;color:var(--accent);">
+          Contacter un humain →
+        </a>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg msg-bot">
+          👋 Bonjour ! Je suis votre assistant IT. Je peux vous aider avec les problèmes courants : connexion, mots de passe, logiciels, imprimantes… Que puis-je faire pour vous ?
+        </div>
+      </div>
+      <div class="chat-footer">
+        <textarea id="chatInput" placeholder="Décrivez votre problème…" rows="1" onkeydown="handleChatKey(event)"></textarea>
+        <button class="chat-send" onclick="sendMessage()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: DOWNLOADS -->
+  <div class="tab-panel" id="tab-downloads">
+    <div style="text-align:center;margin-bottom:28px;">
+      <p style="color:var(--text-secondary);font-size:15px;">Logiciels essentiels pour votre quotidien informatique.</p>
+    </div>
+    <div class="dl-grid">
+      <a href="https://www.teamviewer.com/fr/telecharger/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-blue">🖥</div>
+        <div class="dl-info">
+          <h4>TeamViewer</h4>
+          <p>Prise en main à distance</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.microsoft.com/fr-fr/microsoft-365" target="_blank" class="dl-card">
+        <div class="dl-icon bg-orange">📄</div>
+        <div class="dl-info">
+          <h4>Pack Office 365</h4>
+          <p>Word, Excel, PowerPoint…</p>
+        </div>
+        <span class="dl-badge">Licence</span>
+      </a>
+
+      <a href="https://www.microsoft.com/fr-fr/microsoft-teams/download-app" target="_blank" class="dl-card">
+        <div class="dl-icon bg-purple">💬</div>
+        <div class="dl-info">
+          <h4>Microsoft Teams</h4>
+          <p>Messagerie & visioconférence</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.videolan.org/vlc/download-windows.fr.html" target="_blank" class="dl-card">
+        <div class="dl-icon bg-orange">🎬</div>
+        <div class="dl-info">
+          <h4>VLC Media Player</h4>
+          <p>Lecteur multimédia universel</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.advanced-ip-scanner.com/fr/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-teal">🔍</div>
+        <div class="dl-info">
+          <h4>IP Scanner</h4>
+          <p>Analyse réseau local</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.google.com/intl/fr_fr/chrome/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-green">🌐</div>
+        <div class="dl-info">
+          <h4>Google Chrome</h4>
+          <p>Navigateur web</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.mozilla.org/fr/firefox/new/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-orange">🦊</div>
+        <div class="dl-info">
+          <h4>Mozilla Firefox</h4>
+          <p>Navigateur web alternatif</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.7-zip.org/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-blue">🗜</div>
+        <div class="dl-info">
+          <h4>7-Zip</h4>
+          <p>Compression de fichiers</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.adobe.com/fr/acrobat/pdf-reader.html" target="_blank" class="dl-card">
+        <div class="dl-icon bg-red">📕</div>
+        <div class="dl-info">
+          <h4>Adobe Acrobat Reader</h4>
+          <p>Lecture de fichiers PDF</p>
+        </div>
+        <span class="dl-badge">Gratuit</span>
+      </a>
+
+      <a href="https://www.malwarebytes.com/fr/" target="_blank" class="dl-card">
+        <div class="dl-icon bg-green">🛡</div>
+        <div class="dl-info">
+          <h4>Malwarebytes</h4>
+          <p>Anti-malware & sécurité</p>
+        </div>
+        <span class="dl-badge">Freemium</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- TAB: INTERVENTION -->
+  <div class="tab-panel" id="tab-intervention">
+    <div class="form-container">
+      <div class="form-notice">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Interventions <strong>à distance uniquement</strong>. Un devis vous sera envoyé par e-mail sous 24h.
+      </div>
+
+      <form id="interventionForm" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom *</label>
+            <input type="text" name="prenom" placeholder="Jean" required />
+          </div>
+          <div class="form-group">
+            <label>Nom *</label>
+            <input type="text" name="nom" placeholder="Dupont" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input type="email" name="email" placeholder="jean.dupont@exemple.fr" required />
+          </div>
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input type="tel" name="telephone" placeholder="06 00 00 00 00" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Système d'exploitation *</label>
+          <select name="os" required>
+            <option value="">Sélectionner…</option>
+            <option>Windows 11</option>
+            <option>Windows 10</option>
+            <option>Windows 8 / 8.1</option>
+            <option>macOS</option>
+            <option>Linux / Ubuntu</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Type de problème *</label>
+          <select name="type" required>
+            <option value="">Sélectionner…</option>
+            <option>Virus / Malware</option>
+            <option>Lenteur système</option>
+            <option>Problème réseau / Internet</option>
+            <option>Logiciel défaillant</option>
+            <option>Mot de passe / Accès</option>
+            <option>Imprimante / Périphérique</option>
+            <option>Récupération de données</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Description du problème *</label>
+          <textarea name="description" placeholder="Décrivez votre problème en détail : depuis quand, ce qui a changé, les messages d'erreur éventuels…" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Disponibilités préférées</label>
+          <input type="text" name="disponibilites" placeholder="Ex : lundi matin, mercredi après-midi…" />
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+          <input type="checkbox" id="cgu" name="cgu" required style="width:auto;accent-color:var(--accent);" />
+          <label for="cgu" style="font-size:13px;margin-bottom:0;font-weight:400;">J'accepte que mes données soient transmises à <strong>support@kricher.fr</strong> pour traitement.</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;">
+          Envoyer ma demande — Recevoir un devis
+        </button>
+      </form>
+
+      <div id="formSuccess" style="display:none;text-align:center;padding:40px 20px;">
+        <div style="font-size:52px;margin-bottom:16px;">✅</div>
+        <h3 style="font-size:20px;margin-bottom:8px;">Demande envoyée !</h3>
+        <p style="color:var(--text-secondary);">Vous recevrez un devis à l'adresse e-mail indiquée sous 24h ouvrées.</p>
+        <p style="color:var(--text-secondary);margin-top:8px;">Contact direct : <a href="mailto:support@kricher.fr">support@kricher.fr</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: FAQ -->
+  <div class="tab-panel" id="tab-faq">
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Mon ordinateur est lent, comment le redémarrer correctement ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Commencez par fermer toutes les applications ouvertes, puis faites Démarrer → Arrêter → Redémarrer (et non "Éteindre"). Attendez que l'ordinateur redémarre complètement avant de l'utiliser. Si le problème persiste, vérifiez les programmes qui démarrent automatiquement via le Gestionnaire des tâches (Ctrl+Shift+Échap) → onglet Démarrage.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          J'ai oublié mon mot de passe Windows, que faire ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Pour un compte Microsoft : rendez-vous sur account.microsoft.com depuis un autre appareil et cliquez sur "Mot de passe oublié". Pour un compte local Windows : redémarrez le PC et accédez aux options avancées de démarrage (F8 ou Shift+Redémarrer) pour accéder à la réinitialisation. En cas de blocage complet, contactez-nous via une demande d'intervention.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Internet ne fonctionne plus, comment diagnostiquer ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            1. Vérifiez si d'autres appareils sont connectés (téléphone, tablette). 2. Redémarrez votre box/routeur (débranchez 30 secondes). 3. Sur Windows : Paramètres → Réseau → Dépannage réseau. 4. Si WiFi uniquement : rapprochez-vous du routeur ou branchez un câble Ethernet. 5. Si le problème touche tous vos appareils, contactez votre opérateur.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Mon antivirus a trouvé un virus, que dois-je faire ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            Ne paniquez pas. Laissez l'antivirus terminer son analyse et appliquez les actions recommandées (mise en quarantaine ou suppression). Redémarrez ensuite l'ordinateur. Effectuez une seconde analyse avec Malwarebytes (téléchargeable dans l'onglet Téléchargements). Changez vos mots de passe importants depuis un autre appareil.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Mon imprimante n'est plus reconnue, comment la réinstaller ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            1. Éteignez et rallumez l'imprimante. 2. Vérifiez le câble USB ou la connexion WiFi. 3. Allez dans Paramètres → Bluetooth et appareils → Imprimantes → retirez l'imprimante et ajoutez-la à nouveau. 4. Redémarrez le service Print Spooler : tapez "services.msc" dans le menu démarrer, trouvez "Spouleur d'impression", faites clic droit → Redémarrer.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Comment préparer mon ordinateur pour une intervention à distance ?
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            1. Téléchargez TeamViewer (disponible dans l'onglet Téléchargements). 2. Lancez TeamViewer et notez votre ID et mot de passe temporaire. 3. Soyez devant votre ordinateur pendant l'intervention. 4. Fermez les applications sensibles (banque, messagerie perso) que vous ne souhaitez pas partager. 5. Assurez-vous d'avoir une connexion internet stable.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Helpdesk IT — kricher.fr</p>
+  <p style="margin-top:6px;"><a href="mailto:support@kricher.fr">support@kricher.fr</a></p>
+</footer>
+
+<script>
+  /* ── TABS ── */
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ── CHAT IA ── */
+  const responses = {
+    lent: [
+      "Un ordinateur lent peut avoir plusieurs causes. Essayez d'abord de redémarrer (pas juste mettre en veille). Si ça persiste : vérifiez le Gestionnaire des tâches (Ctrl+Shift+Échap) pour voir si un programme consomme beaucoup de ressources. Voulez-vous que je vous guide étape par étape ?",
+    ],
+    mot_de_passe: [
+      "Pour réinitialiser un mot de passe Windows : si c'est un compte Microsoft, rendez-vous sur account.microsoft.com depuis un autre appareil. Si c'est un compte local, démarrez en mode sans échec. Je peux vous guider selon votre situation. Quel type de compte utilisez-vous ?",
+    ],
+    internet: [
+      "Pas d'inquiétude, voici les étapes de diagnostic : 1️⃣ Vérifiez si votre téléphone est connecté au même WiFi. 2️⃣ Redémarrez votre box (débranchez 30s). 3️⃣ Sur PC : clic droit sur l'icône réseau → Dépanner. Avez-vous accès à internet sur d'autres appareils ?",
+    ],
+    imprimante: [
+      "Pour l'imprimante : commencez par l'éteindre et la rallumer, puis allez dans Paramètres → Bluetooth et appareils → Imprimantes. Retirez-la et rajoutez-la. Quel modèle d'imprimante avez-vous ?",
+    ],
+    virus: [
+      "Ne paniquez pas. Laissez votre antivirus terminer l'analyse et mettez en quarantaine ce qu'il détecte. Ensuite, je recommande Malwarebytes (disponible dans l'onglet Téléchargements) pour une seconde analyse. Changez vos mots de passe depuis un autre appareil par précaution.",
+    ],
+    ecran: [
+      "Pour un écran noir : 1️⃣ Vérifiez si l'écran est bien allumé (bouton power). 2️⃣ Appuyez sur la touche Windows + P pour changer de mode d'affichage. 3️⃣ Si vous avez un écran externe, vérifiez le câble HDMI/VGA. 4️⃣ Faites Ctrl+Alt+Suppr pour voir si le système répond. Pouvez-vous décrire exactement ce que vous voyez ?",
+    ],
+    installer: [
+      "Pour installer un logiciel en toute sécurité : téléchargez toujours depuis le site officiel du développeur (les logiciels courants sont dans l'onglet Téléchargements). Vérifiez l'extension du fichier (.exe pour Windows). Pendant l'installation, décochez les logiciels proposés en plus. Quel logiciel souhaitez-vous installer ?",
+    ],
+    default: [
+      "Je comprends votre demande. Pour vous aider au mieux, pourriez-vous me donner plus de détails ? Par exemple : depuis quand avez-vous ce problème, et qu'est-ce qui a changé sur votre ordinateur récemment ?",
+      "Merci pour ces informations. Pour résoudre ce problème, voici ma recommandation : commencez par redémarrer votre ordinateur si ce n'est pas encore fait. Si le problème persiste, je vous conseille d'ouvrir une demande d'intervention via l'onglet dédié pour un accompagnement personnalisé.",
+      "Je vais analyser votre problème. En attendant, assurez-vous que Windows est bien à jour (Paramètres → Windows Update) car beaucoup de problèmes se résolvent avec les dernières mises à jour. Avez-vous d'autres détails à me communiquer ?",
+    ]
+  };
+
+  function getResponse(msg) {
+    const m = msg.toLowerCase();
+    if (m.includes('lent') || m.includes('slow') || m.includes('ram') || m.includes('mémoire')) return responses.lent[0];
+    if (m.includes('mot de passe') || m.includes('password') || m.includes('identifiant') || m.includes('connexion')) return responses.mot_de_passe[0];
+    if (m.includes('internet') || m.includes('réseau') || m.includes('wifi') || m.includes('connexion') || m.includes('box')) return responses.internet[0];
+    if (m.includes('imprimante') || m.includes('printer') || m.includes('imprimer')) return responses.imprimante[0];
+    if (m.includes('virus') || m.includes('malware') || m.includes('antivirus') || m.includes('piraté')) return responses.virus[0];
+    if (m.includes('écran') || m.includes('noir') || m.includes('affichage') || m.includes('écran')) return responses.ecran[0];
+    if (m.includes('installer') || m.includes('logiciel') || m.includes('télécharger')) return responses.installer[0];
+    const rand = Math.floor(Math.random() * responses.default.length);
+    return responses.default[rand];
+  }
+
+  function addMsg(text, type) {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg msg-' + type;
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg msg-bot msg-typing';
+    div.id = 'typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    input.value = '';
+    input.style.height = 'auto';
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      addMsg(getResponse(text), 'bot');
+    }, 900 + Math.random() * 600);
+  }
+
+  function sendQuick(text) {
+    document.getElementById('chatInput').value = text;
+    sendMessage();
+    document.querySelector('[data-tab="chat"]').click();
+  }
+
+  function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // Auto-resize textarea
+  document.getElementById('chatInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+
+  /* ── FAQ ── */
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const answer = btn.nextElementSibling;
+    const isOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-a').style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  }
+
+  /* ── FORM ── */
+  function submitForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('interventionForm');
+    const data = new FormData(form);
+    const subject = encodeURIComponent('Demande d\'intervention - ' + data.get('prenom') + ' ' + data.get('nom'));
+    const body = encodeURIComponent(
+      'Prénom : ' + data.get('prenom') + '\n' +
+      'Nom : ' + data.get('nom') + '\n' +
+      'E-mail : ' + data.get('email') + '\n' +
+      'Téléphone : ' + (data.get('telephone') || 'Non renseigné') + '\n' +
+      'OS : ' + data.get('os') + '\n' +
+      'Type : ' + data.get('type') + '\n' +
+      'Disponibilités : ' + (data.get('disponibilites') || 'Non renseignées') + '\n\n' +
+      'Description :\n' + data.get('description')
+    );
+    window.location.href = 'mailto:support@kricher.fr?subject=' + subject + '&body=' + body;
+    form.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+
+  /* ── SEARCH ── */
+  const searchable = [
+    { icon: '💬', title: 'Assistance IA', desc: 'Tchat avec l\'assistant helpdesk', tab: 'chat' },
+    { icon: '⬇', title: 'TeamViewer', desc: 'Télécharger TeamViewer', tab: 'downloads', url: 'https://www.teamviewer.com/fr/telecharger/' },
+    { icon: '⬇', title: 'Pack Office', desc: 'Microsoft Office 365', tab: 'downloads', url: 'https://www.microsoft.com/fr-fr/microsoft-365' },
+    { icon: '⬇', title: 'VLC', desc: 'Lecteur multimédia VLC', tab: 'downloads', url: 'https://www.videolan.org/vlc/' },
+    { icon: '⬇', title: 'Teams', desc: 'Microsoft Teams', tab: 'downloads' },
+    { icon: '🛠', title: 'Demande d\'intervention', desc: 'Formulaire de demande à distance', tab: 'intervention' },
+    { icon: '❓', title: 'FAQ — Ordinateur lent', desc: 'Comment accélérer son PC', tab: 'faq' },
+    { icon: '❓', title: 'FAQ — Mot de passe', desc: 'Réinitialiser un mot de passe', tab: 'faq' },
+    { icon: '❓', title: 'FAQ — Internet', desc: 'Dépanner sa connexion', tab: 'faq' },
+    { icon: '❓', title: 'FAQ — Virus', desc: 'Que faire en cas de virus', tab: 'faq' },
+  ];
+
+  const navInput = document.getElementById('navSearchInput');
+  const searchDropdown = document.getElementById('searchDropdown');
+  const resultsList = document.getElementById('search-results-list');
+
+  navInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    resultsList.innerHTML = '';
+    if (!q) { searchDropdown.style.display = 'none'; return; }
+
+    const matches = searchable.filter(s =>
+      s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q)
+    ).slice(0, 5);
+
+    if (matches.length === 0) { searchDropdown.style.display = 'none'; return; }
+
+    matches.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'search-result-item';
+      div.innerHTML = `<span style="font-size:18px;">${m.icon}</span><div><div style="font-size:14px;font-weight:500;">${m.title}</div><div style="font-size:12px;color:var(--text-secondary);">${m.desc}</div></div>`;
+      div.addEventListener('click', () => {
+        document.querySelector('[data-tab="' + m.tab + '"]').click();
+        navInput.value = '';
+        searchDropdown.style.display = 'none';
+      });
+      resultsList.appendChild(div);
+    });
+
+    searchDropdown.style.display = 'block';
+  });
+
+  document.addEventListener('click', e => {
+    if (!document.getElementById('navSearch').contains(e.target)) {
+      searchDropdown.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>

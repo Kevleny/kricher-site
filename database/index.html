@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base de données — kricher.fr</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .db-hero { background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(191,90,242,0.15) 0%, transparent 70%); }
+
+    /* AUTH SCREEN */
+    #authScreen {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-hover);
+      text-align: center;
+    }
+
+    .auth-icon {
+      width: 64px; height: 64px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #bf5af2, #5ac8fa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .auth-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .auth-card p { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+
+    .auth-field {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .auth-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .auth-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 14px;
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-field input:focus {
+      border-color: #bf5af2;
+      box-shadow: 0 0 0 3px rgba(191,90,242,0.12);
+    }
+
+    .auth-error {
+      background: rgba(255,69,58,0.1);
+      border: 1px solid rgba(255,69,58,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #ff453a;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* DASHBOARD */
+    #dashboard { display: none; }
+
+    .db-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .db-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; }
+    .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    .stat-sub { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+
+    /* TABLES PANEL */
+    .db-panel {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .db-panel { grid-template-columns: 1fr; }
+    }
+
+    .tables-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .table-item {
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      color: var(--text);
+    }
+
+    .table-item:last-child { border-bottom: none; }
+    .table-item:hover { background: var(--bg); }
+    .table-item.active { background: rgba(191,90,242,0.08); color: #bf5af2; }
+    .table-item.active .table-dot { background: #bf5af2; }
+
+    .table-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .table-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 2px 7px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+
+    /* DATA TABLE */
+    .data-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .data-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .data-header-left { display: flex; align-items: center; gap: 10px; }
+    .data-header h3 { font-size: 15px; font-weight: 600; }
+
+    .data-search {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 13px;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      width: 200px;
+      transition: border-color 0.2s;
+    }
+
+    .data-search:focus { border-color: #bf5af2; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12.5px;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--bg); }
+
+    .null-value { color: var(--text-secondary); font-style: italic; }
+    .bool-true  { color: #30d158; }
+    .bool-false { color: #ff453a; }
+
+    .table-pagination {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pagination-btns { display: flex; gap: 6px; }
+    .page-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .page-btn:hover:not(:disabled) { border-color: #bf5af2; color: #bf5af2; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* LOADING */
+    .loading-row td {
+      text-align: center;
+      padding: 40px !important;
+      color: var(--text-secondary) !important;
+      font-family: inherit !important;
+      font-style: italic;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: #bf5af2;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SUPABASE link */
+    .supabase-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .supabase-link:hover { border-color: #bf5af2; color: #bf5af2; }
+
+    .logout-btn {
+      padding: 7px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: #ff453a; color: #ff453a; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    kricher.fr
+  </a>
+  <ul class="nav-links">
+    <li><a href="./" style="opacity:1;font-weight:600;">Base de données</a></li>
+    <li><a href="../apps/">Applications</a></li>
+  </ul>
+</nav>
+
+<div class="db-hero">
+  <div class="hero" style="padding-bottom:32px;">
+    <p class="hero-eyebrow" style="color:#bf5af2;">Supabase</p>
+    <h1 style="font-size:clamp(32px,6vw,60px);">Base de données</h1>
+    <p>Consultez vos tables et données Supabase en temps réel.</p>
+  </div>
+</div>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-icon">🗄</div>
+    <h2>Connexion Supabase</h2>
+    <p>Entrez les clés de votre projet pour accéder aux données.</p>
+
+    <div class="auth-error" id="authError">URL ou clé invalide. Vérifiez vos informations.</div>
+
+    <div class="auth-field">
+      <label>URL du projet</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxxx.supabase.co" autocomplete="off" />
+    </div>
+
+    <div class="auth-field">
+      <label>Clé Anon (publique)</label>
+      <input type="password" id="supabaseKey" placeholder="eyJhbGciOi..." autocomplete="off" />
+    </div>
+
+    <div style="margin:16px 0 20px;text-align:left;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="rememberKeys" style="accent-color:#bf5af2;" />
+        Mémoriser les clés (localStorage)
+      </label>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;background:linear-gradient(135deg,#bf5af2,#5ac8fa);" onclick="connect()">
+      Se connecter
+    </button>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <a href="https://supabase.com/dashboard/project/ttuisauvkjqldkmejgtg" target="_blank" class="supabase-link" style="margin:0 auto;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ouvrir le dashboard Supabase
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="section" style="padding-top:0;">
+
+    <div class="db-topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="badge green"><span style="width:7px;height:7px;border-radius:50%;background:#fff;display:inline-block;"></span> Connecté</span>
+        <span id="projectUrl" style="font-size:13px;color:var(--text-secondary);font-family:monospace;"></span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <a href="https://supabase.com/dashboard/project/ttuisauvkjqldkmejgtg" target="_blank" class="supabase-link">
+          Dashboard Supabase ↗
+        </a>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="db-stats" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-label">Tables</div>
+        <div class="stat-value" id="statTables">—</div>
+        <div class="stat-sub">dans le schéma public</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Table active</div>
+        <div class="stat-value" id="statActive">—</div>
+        <div class="stat-sub">sélectionnée</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Lignes chargées</div>
+        <div class="stat-value" id="statRows">—</div>
+        <div class="stat-sub">dans la vue actuelle</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Projet</div>
+        <div class="stat-value" style="font-size:16px;padding-top:4px;" id="statProject">—</div>
+        <div class="stat-sub">ID Supabase</div>
+      </div>
+    </div>
+
+    <!-- PANEL -->
+    <div class="db-panel">
+
+      <!-- Sidebar tables -->
+      <div class="tables-sidebar">
+        <div class="sidebar-header">Tables</div>
+        <div id="tablesList">
+          <div class="table-item" style="justify-content:center;color:var(--text-secondary);font-size:13px;">
+            <span class="spinner"></span> Chargement…
+          </div>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="data-panel">
+        <div class="data-header">
+          <div class="data-header-left">
+            <h3 id="dataTitle">Sélectionnez une table</h3>
+            <span class="badge gray" id="dataCount" style="display:none;"></span>
+          </div>
+          <input type="text" class="data-search" id="dataSearch" placeholder="Filtrer…" oninput="filterTable()" style="display:none;" />
+        </div>
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody">
+              <tr class="loading-row"><td colspan="10" style="font-family:inherit;">Sélectionnez une table dans le panneau de gauche.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-pagination" id="pagination" style="display:none;">
+          <span id="paginationInfo"></span>
+          <div class="pagination-btns">
+            <button class="page-btn" id="prevBtn" onclick="changePage(-1)" disabled>← Préc.</button>
+            <button class="page-btn" id="nextBtn" onclick="changePage(1)">Suiv. →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Base de données — kricher.fr</p>
+  <p style="margin-top:6px;">Données hébergées sur <a href="https://supabase.com" target="_blank">Supabase</a></p>
+</footer>
+
+<script>
+  let supabaseUrl = '';
+  let supabaseKey = '';
+  let currentTable = '';
+  let allData = [];
+  let filteredData = [];
+  let currentPage = 0;
+  const PAGE_SIZE = 20;
+
+  // Check stored creds
+  window.addEventListener('DOMContentLoaded', () => {
+    const stored = localStorage.getItem('sb_creds');
+    if (stored) {
+      try {
+        const c = JSON.parse(stored);
+        document.getElementById('supabaseUrl').value = c.url || '';
+        document.getElementById('supabaseKey').value = c.key || '';
+        document.getElementById('rememberKeys').checked = true;
+      } catch {}
+    }
+  });
+
+  async function connect() {
+    const urlInput = document.getElementById('supabaseUrl').value.trim().replace(/\/$/, '');
+    const keyInput = document.getElementById('supabaseKey').value.trim();
+    const err = document.getElementById('authError');
+    err.style.display = 'none';
+
+    if (!urlInput || !keyInput) {
+      err.textContent = 'Veuillez remplir tous les champs.';
+      err.style.display = 'block';
+      return;
+    }
+
+    // Test connection by fetching tables
+    try {
+      const res = await fetch(urlInput + '/rest/v1/?apikey=' + keyInput, {
+        headers: { 'Authorization': 'Bearer ' + keyInput, 'apikey': keyInput }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      supabaseUrl = urlInput;
+      supabaseKey = keyInput;
+
+      if (document.getElementById('rememberKeys').checked) {
+        localStorage.setItem('sb_creds', JSON.stringify({ url: urlInput, key: keyInput }));
+      }
+
+      showDashboard();
+    } catch (e) {
+      err.textContent = 'Connexion impossible. Vérifiez l\'URL et la clé anon.';
+      err.style.display = 'block';
+    }
+  }
+
+  async function showDashboard() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    // Extract project ID
+    const projectId = supabaseUrl.replace('https://', '').split('.')[0];
+    document.getElementById('projectUrl').textContent = projectId + '.supabase.co';
+    document.getElementById('statProject').textContent = projectId;
+
+    await loadTables();
+  }
+
+  async function loadTables() {
+    try {
+      // Use the OpenAPI spec to get table names
+      const res = await fetch(supabaseUrl + '/rest/v1/?apikey=' + supabaseKey, {
+        headers: { 'Authorization': 'Bearer ' + supabaseKey, 'apikey': supabaseKey }
+      });
+      const spec = await res.json();
+      const tables = Object.keys(spec.definitions || spec.paths || {})
+        .filter(k => !k.startsWith('/'))
+        .map(k => k.replace(/^\//, ''));
+
+      // Fallback: try paths
+      let tableNames = tables;
+      if (tableNames.length === 0 && spec.paths) {
+        tableNames = Object.keys(spec.paths)
+          .map(p => p.replace(/^\//, ''))
+          .filter(p => p && !p.includes('/') && !p.includes('{'));
+      }
+
+      renderTablesList(tableNames);
+      document.getElementById('statTables').textContent = tableNames.length;
+    } catch {
+      document.getElementById('tablesList').innerHTML =
+        '<div class="table-item" style="color:#ff453a;font-size:13px;">Erreur de chargement</div>';
+    }
+  }
+
+  function renderTablesList(tables) {
+    const list = document.getElementById('tablesList');
+    if (tables.length === 0) {
+      list.innerHTML = '<div class="table-item" style="color:var(--text-secondary);font-size:13px;">Aucune table trouvée</div>';
+      return;
+    }
+    list.innerHTML = tables.map(t => `
+      <div class="table-item" onclick="loadTable('${t}')" id="ti-${t}">
+        <span class="table-dot"></span>
+        ${t}
+        <span class="table-count" id="tc-${t}">—</span>
+      </div>
+    `).join('');
+
+    // Auto-load first table
+    if (tables.length > 0) loadTable(tables[0]);
+  }
+
+  async function loadTable(name) {
+    // Update sidebar active state
+    document.querySelectorAll('.table-item').forEach(el => el.classList.remove('active'));
+    const item = document.getElementById('ti-' + name);
+    if (item) item.classList.add('active');
+
+    currentTable = name;
+    document.getElementById('statActive').textContent = name;
+    document.getElementById('dataTitle').textContent = name;
+    document.getElementById('dataSearch').style.display = 'block';
+    document.getElementById('dataSearch').value = '';
+
+    // Show loading
+    document.getElementById('tableHead').innerHTML = '';
+    document.getElementById('tableBody').innerHTML =
+      '<tr class="loading-row"><td colspan="10"><span class="spinner"></span> Chargement des données…</td></tr>';
+    document.getElementById('pagination').style.display = 'none';
+    document.getElementById('dataCount').style.display = 'none';
+
+    try {
+      const res = await fetch(supabaseUrl + '/rest/v1/' + name + '?limit=500', {
+        headers: {
+          'Authorization': 'Bearer ' + supabaseKey,
+          'apikey': supabaseKey,
+          'Prefer': 'count=exact'
+        }
+      });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      allData = data;
+      filteredData = data;
+      currentPage = 0;
+
+      // Update count badge
+      const countRange = res.headers.get('content-range');
+      const total = countRange ? countRange.split('/')[1] : data.length;
+      document.getElementById('tc-' + name).textContent = total;
+      document.getElementById('statRows').textContent = data.length;
+
+      const badge = document.getElementById('dataCount');
+      badge.textContent = total + ' lignes';
+      badge.style.display = 'inline-flex';
+
+      renderTable();
+    } catch (e) {
+      document.getElementById('tableBody').innerHTML =
+        '<tr class="loading-row"><td colspan="10" style="color:#ff453a;">Erreur : ' + e.message + '</td></tr>';
+    }
+  }
+
+  function renderTable() {
+    const start = currentPage * PAGE_SIZE;
+    const pageData = filteredData.slice(start, start + PAGE_SIZE);
+
+    if (filteredData.length === 0) {
+      document.getElementById('tableHead').innerHTML = '';
+      document.getElementById('tableBody').innerHTML =
+        '<tr class="loading-row"><td colspan="10">Aucune donnée trouvée.</td></tr>';
+      document.getElementById('pagination').style.display = 'none';
+      return;
+    }
+
+    const cols = Object.keys(pageData[0] || {});
+
+    document.getElementById('tableHead').innerHTML =
+      '<tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
+
+    document.getElementById('tableBody').innerHTML = pageData.map(row =>
+      '<tr>' + cols.map(c => {
+        const v = row[c];
+        if (v === null || v === undefined) return '<td class="null-value">null</td>';
+        if (v === true) return '<td class="bool-true">true</td>';
+        if (v === false) return '<td class="bool-false">false</td>';
+        if (typeof v === 'object') return '<td title="' + JSON.stringify(v).replace(/"/g, '&quot;') + '">' + JSON.stringify(v).substring(0, 40) + '…</td>';
+        const str = String(v);
+        return '<td title="' + str.replace(/"/g, '&quot;') + '">' + (str.length > 40 ? str.substring(0, 40) + '…' : str) + '</td>';
+      }).join('') + '</tr>'
+    ).join('');
+
+    // Pagination
+    const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+    const pagination = document.getElementById('pagination');
+    pagination.style.display = 'flex';
+    document.getElementById('paginationInfo').textContent =
+      `Page ${currentPage + 1} / ${totalPages} — ${filteredData.length} lignes`;
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').disabled = currentPage >= totalPages - 1;
+  }
+
+  function filterTable() {
+    const q = document.getElementById('dataSearch').value.toLowerCase();
+    filteredData = q ? allData.filter(row =>
+      Object.values(row).some(v => v !== null && String(v).toLowerCase().includes(q))
+    ) : allData;
+    currentPage = 0;
+    renderTable();
+    document.getElementById('statRows').textContent = filteredData.length;
+  }
+
+  function changePage(dir) {
+    currentPage += dir;
+    renderTable();
+    document.querySelector('.data-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function logout() {
+    localStorage.removeItem('sb_creds');
+    supabaseUrl = '';
+    supabaseKey = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('supabaseUrl').value = '';
+    document.getElementById('supabaseKey').value = '';
+    document.getElementById('authError').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Applications — kricher.fr</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    .app-hero { background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(48,209,88,0.15) 0%, transparent 70%); }
+
+    .app-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+    .app-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .app-big-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .app-card h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .app-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+
+    .app-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 14px 0;
+    }
+
+    .app-tag {
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      letter-spacing: 0.02em;
+    }
+
+    .app-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm {
+      padding: 9px 18px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-sm-primary { background: var(--accent); color: #fff; }
+    .btn-sm-primary:hover { background: var(--accent-hover); }
+    .btn-sm-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-sm-secondary:hover { background: var(--border); }
+
+    .github-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .github-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,113,227,0.04); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    kricher.fr
+  </a>
+  <ul class="nav-links">
+    <li><a href="./" style="opacity:1;font-weight:600;">Applications</a></li>
+    <li><a href="../helpdesk/">Helpdesk</a></li>
+    <li><a href="mailto:support@kricher.fr">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="app-hero">
+  <div class="hero" style="padding-bottom:32px;">
+    <p class="hero-eyebrow" style="color:#30d158;">Outils professionnels</p>
+    <h1 style="font-size:clamp(32px,6vw,60px);">Mes Applications</h1>
+    <p>Rapports, suivi d'interventions et gestion — tous vos outils en un coup d'œil.</p>
+    <a href="https://github.com/Kevleny" target="_blank" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      Voir sur GitHub
+    </a>
+  </div>
+</div>
+
+<div class="section" style="padding-top:0;">
+  <div class="grid-2">
+
+    <!-- Rapport d'intervention -->
+    <div class="app-card">
+      <div class="app-card-header">
+        <div class="app-big-icon bg-blue">📋</div>
+        <div>
+          <h3>Rapport d'intervention</h3>
+          <span class="badge" style="font-size:11px;padding:3px 10px;">IMP360</span>
+        </div>
+      </div>
+      <p>Créez et gérez vos rapports d'interventions informatiques. Saisie rapide, suivi client et export.</p>
+      <div class="app-tags">
+        <span class="app-tag">HTML</span>
+        <span class="app-tag">Formulaire</span>
+        <span class="app-tag">IT</span>
+      </div>
+      <div class="app-actions">
+        <a href="https://kevleny.github.io/Rapport-d-intervention/" target="_blank" class="btn-sm btn-sm-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ouvrir l'application
+        </a>
+        <a href="https://github.com/Kevleny/Rapport-d-intervention" target="_blank" class="btn-sm btn-sm-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Tableau de suivi PC -->
+    <div class="app-card">
+      <div class="app-card-header">
+        <div class="app-big-icon bg-purple">📊</div>
+        <div>
+          <h3>Tableau de suivi</h3>
+          <span class="badge purple" style="font-size:11px;padding:3px 10px;">Version PC</span>
+        </div>
+      </div>
+      <p>Tableau de bord de suivi des interventions. Visualisez l'état d'avancement, les clients et les tâches en cours.</p>
+      <div class="app-tags">
+        <span class="app-tag">HTML</span>
+        <span class="app-tag">Dashboard</span>
+        <span class="app-tag">Desktop</span>
+      </div>
+      <div class="app-actions">
+        <a href="https://kevleny.github.io/Tableau-de-suivi/" target="_blank" class="btn-sm btn-sm-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ouvrir l'application
+        </a>
+        <a href="https://github.com/Kevleny/Tableau-de-suivi" target="_blank" class="btn-sm btn-sm-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Tableau de suivi Mobile -->
+    <div class="app-card">
+      <div class="app-card-header">
+        <div class="app-big-icon bg-orange">📱</div>
+        <div>
+          <h3>Tableau de suivi</h3>
+          <span class="badge orange" style="font-size:11px;padding:3px 10px;">Version Mobile</span>
+        </div>
+      </div>
+      <p>Version mobile responsive du tableau de suivi. Accès rapide à vos données en déplacement, optimisé pour smartphone.</p>
+      <div class="app-tags">
+        <span class="app-tag">HTML</span>
+        <span class="app-tag">Mobile</span>
+        <span class="app-tag">Responsive</span>
+      </div>
+      <div class="app-actions">
+        <a href="https://kevleny.github.io/Tableau-de-suivi-Mobile/" target="_blank" class="btn-sm btn-sm-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ouvrir l'application
+        </a>
+        <a href="https://github.com/Kevleny/Tableau-de-suivi-Mobile" target="_blank" class="btn-sm btn-sm-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Intervention 2026 -->
+    <div class="app-card">
+      <div class="app-card-header">
+        <div class="app-big-icon bg-teal">🗂</div>
+        <div>
+          <h3>Interventions 2026</h3>
+          <span class="badge" style="background:#5ac8fa;font-size:11px;padding:3px 10px;">2026</span>
+        </div>
+      </div>
+      <p>Gestion et historique de toutes les interventions de l'année 2026. Centralisation des données et suivi complet.</p>
+      <div class="app-tags">
+        <span class="app-tag">HTML</span>
+        <span class="app-tag">Gestion</span>
+        <span class="app-tag">2026</span>
+      </div>
+      <div class="app-actions">
+        <a href="https://kevleny.github.io/Intervention-2026/" target="_blank" class="btn-sm btn-sm-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ouvrir l'application
+        </a>
+        <a href="https://github.com/Kevleny/Intervention-2026" target="_blank" class="btn-sm btn-sm-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GitHub section -->
+  <div style="margin-top:40px;max-width:600px;">
+    <p class="section-title" style="font-size:20px;">Profil GitHub</p>
+    <a href="https://github.com/Kevleny" target="_blank" class="github-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);">github.com/Kevleny</div>
+        <div style="font-size:12px;">Voir tous les dépôts publics</div>
+      </div>
+      <svg style="margin-left:auto;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Applications — kricher.fr</p>
+  <p style="margin-top:6px;"><a href="mailto:support@kricher.fr">support@kricher.fr</a></p>
+</footer>
+
+</body>
+</html>
