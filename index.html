@@ -17,7 +17,6 @@
       --text-dim: #4a5166;
       --accent: #3d7eff;
       --accent-glow: rgba(61,126,255,0.25);
-      --accent2: #00d4ff;
     }
 
     html, body {
@@ -28,19 +27,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NOISE TEXTURE ── */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-    }
-
-    /* ── GRID LINES ── */
-    body::after {
       content: '';
       position: fixed;
       inset: 0;
@@ -52,34 +39,50 @@
       z-index: 0;
     }
 
-    /* ── AUTH SCREEN ── */
-    #auth-screen {
+    /* ── AUTH MODAL ── */
+    #auth-modal {
       position: fixed;
       inset: 0;
-      z-index: 100;
+      z-index: 200;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
-      transition: opacity 0.5s, visibility 0.5s;
-    }
-
-    #auth-screen.hidden {
+      background: rgba(7,9,15,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       opacity: 0;
       visibility: hidden;
-      pointer-events: none;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    #auth-modal.open {
+      opacity: 1;
+      visibility: visible;
     }
 
     .auth-box {
       width: 100%;
-      max-width: 360px;
-      padding: 40px;
+      max-width: 340px;
+      padding: 36px;
       border: 1px solid var(--border);
       border-radius: 16px;
       background: var(--bg2);
       position: relative;
-      z-index: 1;
     }
+
+    .auth-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+    .auth-close:hover { color: var(--text); }
 
     .auth-logo {
       font-size: 11px;
@@ -87,25 +90,23 @@
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
     .auth-box h2 {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       letter-spacing: -0.3px;
     }
 
     .auth-box p {
       font-size: 13px;
       color: var(--text-dim);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 12px; }
 
     .field input {
       width: 100%;
@@ -121,7 +122,6 @@
     }
 
     .field input::placeholder { color: var(--text-dim); }
-
     .field input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-glow);
@@ -130,7 +130,7 @@
     .auth-error {
       font-size: 12px;
       color: #ff4d4d;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       min-height: 16px;
     }
 
@@ -145,11 +145,9 @@
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
-      letter-spacing: 0.02em;
       transition: opacity 0.2s, box-shadow 0.2s;
       position: relative;
     }
-
     .auth-btn:hover { opacity: 0.9; box-shadow: 0 0 20px var(--accent-glow); }
     .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -161,13 +159,10 @@
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
       position: absolute;
-      right: 16px;
-      top: 50%;
+      right: 16px; top: 50%;
       transform: translateY(-50%);
     }
-
     .auth-btn.loading .spinner { display: block; }
-
     @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
 
     /* ── MAIN APP ── */
@@ -180,13 +175,8 @@
       align-items: center;
       justify-content: center;
       padding: 40px 24px;
-      opacity: 0;
-      transition: opacity 0.6s 0.1s;
     }
 
-    #app.visible { opacity: 1; }
-
-    /* GLOW ORBS */
     .orb {
       position: fixed;
       border-radius: 50%;
@@ -194,20 +184,17 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .orb-1 {
       width: 500px; height: 500px;
       background: radial-gradient(circle, rgba(61,126,255,0.12) 0%, transparent 70%);
       top: -150px; left: -100px;
     }
-
     .orb-2 {
       width: 400px; height: 400px;
       background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
       bottom: -100px; right: -50px;
     }
 
-    /* HEADER */
     .site-header {
       text-align: center;
       margin-bottom: 64px;
@@ -227,13 +214,10 @@
       justify-content: center;
       gap: 8px;
     }
-
-    .site-label::before,
-    .site-label::after {
+    .site-label::before, .site-label::after {
       content: '';
       display: block;
-      width: 24px;
-      height: 1px;
+      width: 24px; height: 1px;
       background: var(--accent);
       opacity: 0.5;
     }
@@ -243,13 +227,12 @@
       font-weight: 700;
       letter-spacing: -3px;
       line-height: 1;
-      background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
+      background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.45) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    /* BUTTONS */
     .nav-buttons {
       display: flex;
       gap: 14px;
@@ -271,12 +254,13 @@
       text-decoration: none;
       font-size: 15px;
       font-weight: 500;
-      letter-spacing: -0.1px;
-      transition: all 0.25s;
+      cursor: pointer;
+      font-family: inherit;
       min-width: 180px;
       justify-content: center;
       position: relative;
       overflow: hidden;
+      transition: all 0.25s;
     }
 
     .nav-btn::before {
@@ -294,22 +278,26 @@
       transform: translateY(-2px);
       color: #fff;
     }
-
     .nav-btn:hover::before { opacity: 1; }
 
-    .nav-btn-icon {
-      font-size: 18px;
-      line-height: 1;
+    /* Lock indicator on protected buttons */
+    .nav-btn .lock {
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 9px;
+      opacity: 0.25;
+      transition: opacity 0.2s;
     }
+    .nav-btn:hover .lock { opacity: 0.5; }
+    .nav-btn.authenticated .lock { display: none; }
 
+    .nav-btn-icon { font-size: 18px; line-height: 1; }
     .nav-btn-label { font-size: 14px; font-weight: 600; }
 
-    /* FOOTER */
     .site-footer {
       position: fixed;
       bottom: 24px;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -342,11 +330,11 @@
       border: none;
       font-family: inherit;
       transition: color 0.2s;
+      display: none;
     }
-
     .logout-link:hover { color: #ff4d4d; }
+    .logout-link.visible { display: inline; }
 
-    /* RESPONSIVE */
     @media (max-width: 500px) {
       .nav-buttons { flex-direction: column; align-items: stretch; }
       .nav-btn { min-width: unset; }
@@ -355,12 +343,13 @@
 </head>
 <body>
 
-<!-- ── AUTH ── -->
-<div id="auth-screen">
+<!-- ── AUTH MODAL ── -->
+<div id="auth-modal" onclick="handleModalClick(event)">
   <div class="auth-box">
+    <button class="auth-close" onclick="closeModal()">✕</button>
     <div class="auth-logo">Techlab</div>
     <h2>Accès restreint</h2>
-    <p>Connectez-vous pour accéder à l'espace.</p>
+    <p>Connectez-vous pour continuer.</p>
     <div class="field">
       <input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email" />
     </div>
@@ -386,14 +375,16 @@
   </header>
 
   <nav class="nav-buttons">
-    <a href="https://kevleny.github.io/calendrier-chou/" target="_blank" class="nav-btn">
+    <button class="nav-btn" onclick="protectedNav('https://kevleny.github.io/calendrier-chou/')">
+      <span class="lock">🔒</span>
       <span class="nav-btn-icon">📅</span>
       <span class="nav-btn-label">Calendrier</span>
-    </a>
-    <a href="apps/" class="nav-btn">
+    </button>
+    <button class="nav-btn" onclick="protectedNav('apps/')">
+      <span class="lock">🔒</span>
       <span class="nav-btn-icon">⚡</span>
       <span class="nav-btn-label">Projets</span>
-    </a>
+    </button>
     <a href="helpdesk/" class="nav-btn">
       <span class="nav-btn-icon">🛠</span>
       <span class="nav-btn-label">Helpdesk</span>
@@ -406,7 +397,7 @@
       Système opérationnel
     </span>
     <span class="footer-item">kricher.fr</span>
-    <button class="logout-link" onclick="logout()">Déconnexion</button>
+    <button class="logout-link" id="logout-btn" onclick="logout()">Déconnexion</button>
   </footer>
 </div>
 
@@ -416,21 +407,60 @@
 
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  const authScreen = document.getElementById('auth-screen');
-  const app        = document.getElementById('app');
-  const errEl      = document.getElementById('auth-error');
-  const btn        = document.getElementById('auth-submit');
+  let pendingUrl = null;
+  let isAuthenticated = false;
 
-  // ── Check session on load
+  // Check existing session silently on load
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) showApp();
+    if (session) setAuthenticated(true);
   })();
 
-  // ── Login
+  function setAuthenticated(val) {
+    isAuthenticated = val;
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      if (val) b.classList.add('authenticated');
+      else b.classList.remove('authenticated');
+    });
+    const logoutBtn = document.getElementById('logout-btn');
+    if (val) logoutBtn.classList.add('visible');
+    else logoutBtn.classList.remove('visible');
+  }
+
+  // Click on protected button
+  function protectedNav(url) {
+    if (isAuthenticated) {
+      window.open(url, '_blank');
+      return;
+    }
+    pendingUrl = url;
+    openModal();
+  }
+
+  function openModal() {
+    document.getElementById('auth-error').textContent = '';
+    document.getElementById('auth-email').value = '';
+    document.getElementById('auth-password').value = '';
+    document.getElementById('auth-modal').classList.add('open');
+    setTimeout(() => document.getElementById('auth-email').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('auth-modal').classList.remove('open');
+    pendingUrl = null;
+  }
+
+  // Close on backdrop click
+  function handleModalClick(e) {
+    if (e.target === document.getElementById('auth-modal')) closeModal();
+  }
+
   async function login() {
     const email    = document.getElementById('auth-email').value.trim();
     const password = document.getElementById('auth-password').value;
+    const errEl    = document.getElementById('auth-error');
+    const btn      = document.getElementById('auth-submit');
+
     errEl.textContent = '';
     if (!email || !password) { errEl.textContent = 'Veuillez remplir tous les champs.'; return; }
 
@@ -444,25 +474,28 @@
 
     if (error) {
       errEl.textContent = 'Identifiants incorrects.';
-    } else {
-      showApp();
+      return;
+    }
+
+    setAuthenticated(true);
+    closeModal();
+
+    if (pendingUrl) {
+      const url = pendingUrl;
+      pendingUrl = null;
+      window.open(url, '_blank');
     }
   }
 
-  // ── Logout
   async function logout() {
     await sb.auth.signOut();
-    authScreen.classList.remove('hidden');
-    app.classList.remove('visible');
+    setAuthenticated(false);
   }
 
-  // ── Show app
-  function showApp() {
-    authScreen.classList.add('hidden');
-    requestAnimationFrame(() => app.classList.add('visible'));
-  }
-
-  // ── Enter on password
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
   document.getElementById('auth-password').addEventListener('keydown', e => {
     if (e.key === 'Enter') login();
   });
