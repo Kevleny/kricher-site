@@ -379,9 +379,8 @@
 <body>
 
 <!-- ── AUTH MODAL ── -->
-<div id="auth-modal" onclick="handleModalClick(event)">
+<div id="auth-modal">
   <div class="auth-box">
-    <button class="auth-close" onclick="closeModal()">✕</button>
     <div class="auth-logo">Techlab</div>
     <h2>Accès restreint</h2>
     <p>Connectez-vous pour continuer.</p>
@@ -410,20 +409,18 @@
   </header>
 
   <nav class="nav-buttons">
-    <button class="nav-btn" onclick="protectedNav('https://kevleny.github.io/calendrier-chou/')">
-      <span class="lock">🔒</span>
+    <button class="nav-btn" onclick="window.open('calendrier/', '_blank')">
       <span class="nav-btn-icon">📅</span>
       <span class="nav-btn-label">Calendrier</span>
     </button>
-    <button class="nav-btn" onclick="protectedNav('apps/')">
-      <span class="lock">🔒</span>
+    <button class="nav-btn" onclick="window.open('apps/', '_blank')">
       <span class="nav-btn-icon">⚡</span>
       <span class="nav-btn-label">Projets</span>
     </button>
-    <a href="helpdesk/" class="nav-btn">
+    <button class="nav-btn" onclick="window.open('helpdesk/', '_blank')">
       <span class="nav-btn-icon">🛠</span>
       <span class="nav-btn-label">Helpdesk</span>
-    </a>
+    </button>
   </nav>
 
   <footer class="site-footer">
@@ -442,17 +439,17 @@
 
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  let pendingUrl = null;
-  let isAuthenticated = false;
-
-  // Check existing session silently on load
+  // Check session on load — show modal if not authenticated
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) setAuthenticated(true);
+    if (session) {
+      setAuthenticated(true);
+    } else {
+      openModal();
+    }
   })();
 
   function setAuthenticated(val) {
-    isAuthenticated = val;
     document.querySelectorAll('.nav-btn').forEach(b => {
       if (val) b.classList.add('authenticated');
       else b.classList.remove('authenticated');
@@ -460,16 +457,7 @@
     const logoutBtn = document.getElementById('logout-btn');
     if (val) logoutBtn.classList.add('visible');
     else logoutBtn.classList.remove('visible');
-  }
-
-  // Click on protected button
-  function protectedNav(url) {
-    if (isAuthenticated) {
-      window.open(url, '_blank');
-      return;
-    }
-    pendingUrl = url;
-    openModal();
+    if (!val) openModal();
   }
 
   function openModal() {
@@ -482,12 +470,6 @@
 
   function closeModal() {
     document.getElementById('auth-modal').classList.remove('open');
-    pendingUrl = null;
-  }
-
-  // Close on backdrop click
-  function handleModalClick(e) {
-    if (e.target === document.getElementById('auth-modal')) closeModal();
   }
 
   async function login() {
@@ -515,12 +497,6 @@
 
     setAuthenticated(true);
     closeModal();
-
-    if (pendingUrl) {
-      const url = pendingUrl;
-      pendingUrl = null;
-      window.open(url, '_blank');
-    }
   }
 
   async function logout() {
@@ -528,10 +504,6 @@
     setAuthenticated(false);
   }
 
-  // Keyboard shortcuts
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
   document.getElementById('auth-password').addEventListener('keydown', e => {
     if (e.key === 'Enter') login();
   });
