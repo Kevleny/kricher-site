@@ -227,10 +227,45 @@
       font-weight: 700;
       letter-spacing: -3px;
       line-height: 1;
-      background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.45) 100%);
+      background: linear-gradient(
+        105deg,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0.9) 30%,
+        #fff 40%,
+        rgba(255,255,255,0.9) 50%,
+        rgba(255,255,255,0.35) 80%
+      );
+      background-size: 250% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: titleScan 4s ease-in-out infinite, titleBreath 6s ease-in-out infinite;
+      position: relative;
+      display: inline-block;
+    }
+
+    @keyframes titleScan {
+      0%   { background-position: 150% center; }
+      50%  { background-position: -50% center; }
+      100% { background-position: 150% center; }
+    }
+
+    @keyframes titleBreath {
+      0%, 100% { letter-spacing: -3px; }
+      50%       { letter-spacing: -1px; }
+    }
+
+    .site-title.glitch {
+      animation: titleScan 4s ease-in-out infinite, titleBreath 6s ease-in-out infinite, glitchAnim 0.3s steps(2) forwards;
+    }
+
+    @keyframes glitchAnim {
+      0%   { clip-path: inset(0 0 85% 0); transform: translateX(-4px); }
+      20%  { clip-path: inset(40% 0 40% 0); transform: translateX(4px); }
+      40%  { clip-path: inset(70% 0 0 0); transform: translateX(-2px); }
+      60%  { clip-path: inset(20% 0 60% 0); transform: translateX(3px); }
+      80%  { clip-path: inset(55% 0 20% 0); transform: translateX(-3px); }
+      100% { clip-path: inset(0 0 0 0); transform: translateX(0); }
     }
 
     .nav-buttons {
@@ -503,6 +538,17 @@
   document.getElementById('auth-email').addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('auth-password').focus();
   });
+
+  // Periodic glitch on title
+  (function scheduleGlitch() {
+    const delay = 4000 + Math.random() * 6000;
+    setTimeout(() => {
+      const t = document.querySelector('.site-title');
+      t.classList.add('glitch');
+      t.addEventListener('animationend', () => t.classList.remove('glitch'), { once: true });
+      scheduleGlitch();
+    }, delay);
+  })();
 </script>
 
 </body>
