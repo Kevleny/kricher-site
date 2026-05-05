@@ -115,7 +115,7 @@ async function bootstrap() {
     if (loader) loader.innerHTML = '<div style="color:#f44336;font-size:14px;text-align:center;padding:20px">Erreur Supabase<br><small>Vérifiez la configuration</small></div>';
   }
 }
-bootstrap();
+document.addEventListener('DOMContentLoaded', bootstrap);
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
