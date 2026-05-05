@@ -733,7 +733,7 @@
 <body>
 
 <!-- ── Auth ──────────────────────────────────────────────── -->
-<div id="auth-screen" class="screen active">
+<div id="auth-screen" class="screen">
   <div class="card">
     <div class="card-logo">
       <h1>Notre Calendrier</h1>
@@ -1015,7 +1015,7 @@ async function doLogout() {
   await sb.auth.signOut();
   if (S.channel) sb.removeChannel(S.channel);
   Object.assign(S, { session: null, profile: null, profiles: {}, events: [], channel: null });
-  showScreen('auth');
+  window.location.replace('/');
 }
 
 // ═══════════════════════════════════════════════════════════
